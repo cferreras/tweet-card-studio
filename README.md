@@ -1,8 +1,8 @@
-# Tweet2Image
+# Tweet Card Studio
 
 Create clean tweet-style images directly in the browser, then download them as crisp PNGs.
 
-Tweet2Image is a minimal Next.js app for composing social-post cards without a backend, login, Twitter/X API, database, or AI. Edit the preview inline, upload local images, switch between horizontal and vertical formats, and export only the card.
+Tweet Card Studio is a minimal Next.js app for composing social-post cards without a backend, login, Twitter/X API, database, or AI. Edit the preview inline, upload local images, switch between horizontal and vertical formats, and export only the card.
 
 ## Demo
 
@@ -14,7 +14,6 @@ tweet-card-studio.vercel.app
 
 Vercel domains are first-come, first-served, so use that if available. Good backups:
 
-- `tweet2image-studio.vercel.app`
 - `post-card-maker.vercel.app`
 - `clean-tweet-card.vercel.app`
 

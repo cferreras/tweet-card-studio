@@ -9,7 +9,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Tweet2Image",
+  title: "Tweet Card Studio",
   description: "Create editable tweet-style images and download them as PNG.",
 };
 

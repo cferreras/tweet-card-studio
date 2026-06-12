@@ -98,7 +98,7 @@ export function TweetComposer() {
     <main className="flex min-h-screen flex-col items-center justify-center bg-[#f6f8fa] px-5 py-10">
       <header className="mb-7 text-center">
         <h1 className="text-[28px] font-[800] leading-tight text-ink">
-          Tweet2Image
+          Tweet Card Studio
         </h1>
         <p className="mt-1 text-[14px] font-medium text-muted">
           Create clean tweet-style images in seconds.
