@@ -1,0 +1,51 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  background: #f6f8fa;
+  color: #0f1419;
+  font-family: var(--font-inter), "Geist", "SF Pro Text", "Segoe UI", system-ui, sans-serif;
+  letter-spacing: 0;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+[contenteditable="true"] {
+  outline: none;
+  cursor: text;
+}
+
+[contenteditable="true"]:focus-visible {
+  border-radius: 6px;
+  box-shadow: 0 0 0 3px rgba(168, 132, 255, 0.24);
+}
+
+.is-exporting,
+.is-exporting * {
+  caret-color: transparent !important;
+  outline: none !important;
+  box-shadow: none !important;
+  user-select: none !important;
+}
+
+.is-exporting .export-hidden {
+  display: none !important;
+}
