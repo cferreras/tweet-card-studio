@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { toPng } from "html-to-image";
 import { TweetPreview, TweetState } from "@/components/TweetPreview";
 
@@ -19,10 +19,54 @@ const initialState: TweetState = {
 
 export function TweetComposer() {
   const previewRef = useRef<HTMLDivElement>(null);
+  const previewViewportRef = useRef<HTMLDivElement>(null);
   const [tweet, setTweet] = useState<TweetState>(initialState);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
   const [downloadError, setDownloadError] = useState<string | null>(null);
+  const [previewScale, setPreviewScale] = useState(1);
+  const [previewHeight, setPreviewHeight] = useState<number | null>(null);
+  const exportWidth = tweet.format === "vertical" ? 540 : 820;
+
+  useEffect(() => {
+    function updateScale() {
+      const viewportWidth = previewViewportRef.current?.clientWidth ?? exportWidth;
+      setPreviewScale(Math.min(1, viewportWidth / exportWidth));
+    }
+
+    updateScale();
+    window.addEventListener("resize", updateScale);
+
+    const resizeObserver =
+      typeof ResizeObserver !== "undefined" ? new ResizeObserver(updateScale) : null;
+
+    if (previewViewportRef.current) {
+      resizeObserver?.observe(previewViewportRef.current);
+    }
+
+    return () => {
+      window.removeEventListener("resize", updateScale);
+      resizeObserver?.disconnect();
+    };
+  }, [exportWidth]);
+
+  useEffect(() => {
+    if (!previewRef.current) return;
+
+    function updateHeight() {
+      if (!previewRef.current) return;
+      setPreviewHeight(previewRef.current.offsetHeight);
+    }
+
+    updateHeight();
+
+    const resizeObserver =
+      typeof ResizeObserver !== "undefined" ? new ResizeObserver(updateHeight) : null;
+
+    resizeObserver?.observe(previewRef.current);
+
+    return () => resizeObserver?.disconnect();
+  }, [exportWidth]);
 
   function updateTweet(nextState: Partial<TweetState>) {
     setTweet((current) => ({ ...current, ...nextState }));
@@ -61,12 +105,15 @@ export function TweetComposer() {
     try {
       previewRef.current.classList.add("is-exporting");
       await waitForImages(previewRef.current);
+      const exportHeight = previewRef.current.scrollHeight;
 
       const dataUrl = await toPng(previewRef.current, {
         cacheBust: true,
         pixelRatio: 3,
         backgroundColor: "#ffffff",
         skipFonts: false,
+        width: exportWidth,
+        height: exportHeight,
       });
 
       const response = await fetch(dataUrl);
@@ -105,23 +152,32 @@ export function TweetComposer() {
         </p>
       </header>
       <div
-        ref={previewRef}
-        className={[
-          "origin-center bg-white",
-          tweet.format === "vertical"
-            ? "w-[540px] max-w-[min(540px,calc(100vw-40px))]"
-            : "w-[820px] max-w-[min(820px,calc(100vw-40px))]",
-        ].join(" ")}
+        ref={previewViewportRef}
+        className="mx-auto w-full overflow-visible"
+        style={{
+          maxWidth: exportWidth,
+          height: previewHeight ? previewHeight * previewScale : undefined,
+        }}
       >
-        <TweetPreview
-          state={tweet}
-          isMenuOpen={isMenuOpen}
-          isDownloading={isDownloading}
-          onStateChange={updateTweet}
-          onMenuToggle={() => setIsMenuOpen((open) => !open)}
-          onDownload={handleDownload}
-          onReset={handleReset}
-        />
+        <div
+          className="origin-top-left"
+          style={{
+            width: exportWidth,
+            transform: `scale(${previewScale})`,
+          }}
+        >
+          <div ref={previewRef} className="bg-white" style={{ width: exportWidth }}>
+            <TweetPreview
+              state={tweet}
+              isMenuOpen={isMenuOpen}
+              isDownloading={isDownloading}
+              onStateChange={updateTweet}
+              onMenuToggle={() => setIsMenuOpen((open) => !open)}
+              onDownload={handleDownload}
+              onReset={handleReset}
+            />
+          </div>
+        </div>
       </div>
       <footer className="fixed bottom-4 left-1/2 -translate-x-1/2 text-center text-[13px] font-medium text-muted">
         Made by{" "}
