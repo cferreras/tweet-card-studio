@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { toPng } from "html-to-image";
-import { TweetPreview, TweetState } from "@/components/TweetPreview";
+import { ThemeMode, TweetPreview, TweetState } from "@/components/TweetPreview";
 
 const initialState: TweetState = {
   name: "[Editable name]",
@@ -14,8 +14,10 @@ const initialState: TweetState = {
   imageUrl: null,
   imageVisible: true,
   format: "horizontal",
-  imageBackgroundColor: "#b79bff",
+  theme: "light",
 };
+
+const themeStorageKey = "tweet-card-studio-theme";
 
 export function TweetComposer() {
   const previewRef = useRef<HTMLDivElement>(null);
@@ -27,6 +29,18 @@ export function TweetComposer() {
   const [previewScale, setPreviewScale] = useState(1);
   const [previewHeight, setPreviewHeight] = useState<number | null>(null);
   const exportWidth = tweet.format === "vertical" ? 540 : 820;
+
+  useEffect(() => {
+    const storedTheme = window.localStorage.getItem(themeStorageKey);
+
+    if (storedTheme === "light" || storedTheme === "dark") {
+      updateTweet({ theme: storedTheme });
+      return;
+    }
+
+    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    updateTweet({ theme: prefersDark ? "dark" : "light" });
+  }, []);
 
   useEffect(() => {
     function updateScale() {
@@ -110,7 +124,7 @@ export function TweetComposer() {
       const dataUrl = await toPng(previewRef.current, {
         cacheBust: true,
         pixelRatio: 3,
-        backgroundColor: "#ffffff",
+        backgroundColor: tweet.theme === "dark" ? "#000000" : "#ffffff",
         skipFonts: false,
         width: exportWidth,
         height: exportHeight,
@@ -137,12 +151,37 @@ export function TweetComposer() {
   }
 
   function handleReset() {
-    setTweet(initialState);
+    setTweet((current) => ({ ...initialState, theme: current.theme }));
     setIsMenuOpen(false);
   }
 
+  function handleUseCurrentDate() {
+    const now = new Date();
+    const time = new Intl.DateTimeFormat("en-US", {
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true,
+    }).format(now);
+    const date = new Intl.DateTimeFormat("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    }).format(now);
+
+    updateTweet({ time, date });
+    setIsMenuOpen(false);
+  }
+
+  function handleThemeChange(theme: ThemeMode) {
+    window.localStorage.setItem(themeStorageKey, theme);
+    updateTweet({ theme });
+  }
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-[#f6f8fa] px-5 py-10">
+    <main
+      data-theme={tweet.theme}
+      className="flex min-h-screen flex-col items-center justify-center bg-app px-5 py-10 transition-colors duration-200"
+    >
       <header className="mb-7 text-center">
         <h1 className="text-[28px] font-[800] leading-tight text-ink">
           Tweet Card Studio
@@ -166,7 +205,7 @@ export function TweetComposer() {
             transform: `scale(${previewScale})`,
           }}
         >
-          <div ref={previewRef} className="bg-white" style={{ width: exportWidth }}>
+          <div ref={previewRef} className="bg-card" style={{ width: exportWidth }}>
             <TweetPreview
               state={tweet}
               isMenuOpen={isMenuOpen}
@@ -174,6 +213,8 @@ export function TweetComposer() {
               onStateChange={updateTweet}
               onMenuToggle={() => setIsMenuOpen((open) => !open)}
               onDownload={handleDownload}
+              onUseCurrentDate={handleUseCurrentDate}
+              onThemeChange={handleThemeChange}
               onReset={handleReset}
             />
           </div>
@@ -194,7 +235,7 @@ export function TweetComposer() {
       {downloadError ? (
         <div
           role="status"
-          className="fixed bottom-5 left-1/2 -translate-x-1/2 rounded-md border border-[#d8e1e8] bg-white px-4 py-2 text-sm font-semibold text-ink shadow-[0_10px_28px_rgba(15,20,25,0.12)]"
+          className="fixed bottom-5 left-1/2 -translate-x-1/2 rounded-md border border-[var(--color-menu-border)] bg-menu px-4 py-2 text-sm font-semibold text-ink shadow-[var(--shadow-menu)]"
         >
           {downloadError}
         </div>

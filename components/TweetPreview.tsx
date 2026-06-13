@@ -7,6 +7,7 @@ import { FormatMenu } from "@/components/FormatMenu";
 import { ImageDropZone } from "@/components/ImageDropZone";
 
 export type TweetFormat = "horizontal" | "vertical";
+export type ThemeMode = "light" | "dark";
 
 export type TweetState = {
   name: string;
@@ -18,7 +19,7 @@ export type TweetState = {
   imageUrl: string | null;
   imageVisible: boolean;
   format: TweetFormat;
-  imageBackgroundColor: string;
+  theme: ThemeMode;
 };
 
 type TweetPreviewProps = {
@@ -28,6 +29,8 @@ type TweetPreviewProps = {
   onStateChange: (nextState: Partial<TweetState>) => void;
   onMenuToggle: () => void;
   onDownload: () => void;
+  onUseCurrentDate: () => void;
+  onThemeChange: (theme: ThemeMode) => void;
   onReset: () => void;
 };
 
@@ -38,14 +41,17 @@ export function TweetPreview({
   onStateChange,
   onMenuToggle,
   onDownload,
+  onUseCurrentDate,
+  onThemeChange,
   onReset,
 }: TweetPreviewProps) {
   const isVertical = state.format === "vertical";
+  const imageBackgroundColor = "var(--color-placeholder)";
 
   return (
     <article
       className={[
-        "relative bg-white text-ink",
+        "relative bg-card text-ink",
         "mx-auto overflow-visible",
         isVertical ? "w-[540px] px-8 pb-10 pt-9" : "w-[820px] px-9 pb-8 pt-9",
       ].join(" ")}
@@ -53,7 +59,7 @@ export function TweetPreview({
       <header className="flex items-start gap-5">
         <AvatarUploader
           avatarUrl={state.avatarUrl}
-          accentColor={state.imageBackgroundColor}
+          accentColor="#8aa0b2"
           onAvatarChange={(avatarUrl) => onStateChange({ avatarUrl })}
         />
 
@@ -79,21 +85,20 @@ export function TweetPreview({
           <button
             type="button"
             aria-label="Open menu"
-            className="grid h-9 w-9 place-items-center rounded-full text-muted transition hover:bg-[#eef3f7] focus:outline-none focus-visible:ring-4 focus-visible:ring-[#a884ff]/25"
+            className="grid h-9 w-9 place-items-center rounded-full text-muted transition hover:bg-[var(--color-hover)] focus:outline-none focus-visible:ring-4 focus-visible:ring-[var(--color-focus)]"
             onClick={onMenuToggle}
           >
             <MoreHorizontal aria-hidden className="h-7 w-7 stroke-[3]" />
           </button>
           <FormatMenu
             format={state.format}
-            backgroundColor={state.imageBackgroundColor}
+            theme={state.theme}
             isOpen={isMenuOpen}
             isDownloading={isDownloading}
             onFormatChange={(format) => onStateChange({ format })}
-            onBackgroundColorChange={(imageBackgroundColor) =>
-              onStateChange({ imageBackgroundColor })
-            }
+            onThemeChange={onThemeChange}
             onDownload={onDownload}
+            onUseCurrentDate={onUseCurrentDate}
             onRestoreImage={() => onStateChange({ imageVisible: true, imageUrl: null })}
             onReset={onReset}
           />
@@ -114,7 +119,7 @@ export function TweetPreview({
       {state.imageVisible ? (
         <ImageDropZone
           imageUrl={state.imageUrl}
-          backgroundColor={state.imageBackgroundColor}
+          backgroundColor={imageBackgroundColor}
           format={state.format}
           onImageChange={(imageUrl) => onStateChange({ imageUrl })}
           onImageRemove={() => onStateChange({ imageVisible: false, imageUrl: null })}

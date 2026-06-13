@@ -4,6 +4,36 @@
 
 :root {
   color-scheme: light;
+  --color-app: #f6f8fa;
+  --color-card: #ffffff;
+  --color-menu: #ffffff;
+  --color-ink: #0f1419;
+  --color-muted: #637685;
+  --color-rule: #e7edf2;
+  --color-placeholder: #eef3f7;
+  --color-soft-control: #f2f5f7;
+  --color-hover: #eef3f7;
+  --color-focus: rgba(138, 160, 178, 0.35);
+  --color-menu-border: #dde6ee;
+  --shadow-menu: 0 16px 42px rgba(15, 20, 25, 0.12);
+  --shadow-floating: 0 4px 14px rgba(15, 20, 25, 0.16);
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+  --color-app: #16181c;
+  --color-card: #000000;
+  --color-menu: #000000;
+  --color-ink: #e7e9ea;
+  --color-muted: #71767b;
+  --color-rule: #2f3336;
+  --color-placeholder: #16181c;
+  --color-soft-control: #16181c;
+  --color-hover: #181818;
+  --color-focus: rgba(29, 155, 240, 0.35);
+  --color-menu-border: #2f3336;
+  --shadow-menu: 0 16px 42px rgba(0, 0, 0, 0.32);
+  --shadow-floating: 0 4px 14px rgba(0, 0, 0, 0.28);
 }
 
 * {
@@ -17,8 +47,8 @@ body {
 
 body {
   margin: 0;
-  background: #f6f8fa;
-  color: #0f1419;
+  background: var(--color-app);
+  color: var(--color-ink);
   font-family: var(--font-inter), "Geist", "SF Pro Text", "Segoe UI", system-ui, sans-serif;
   letter-spacing: 0;
 }
@@ -35,7 +65,7 @@ input {
 
 [contenteditable="true"]:focus-visible {
   border-radius: 6px;
-  box-shadow: 0 0 0 3px rgba(168, 132, 255, 0.24);
+  box-shadow: 0 0 0 3px var(--color-focus);
 }
 
 .is-exporting,

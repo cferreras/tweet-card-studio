@@ -30,7 +30,7 @@ export function AvatarUploader({
     <div className="relative h-[76px] w-[76px] shrink-0">
       <button
         type="button"
-        className="group block h-full w-full overflow-hidden rounded-full bg-[#d9e3ec] focus:outline-none focus-visible:ring-4 focus-visible:ring-[#a884ff]/25"
+        className="group block h-full w-full overflow-hidden rounded-full bg-placeholder focus:outline-none focus-visible:ring-4 focus-visible:ring-[var(--color-focus)]"
         aria-label="Change avatar"
         onClick={() => inputRef.current?.click()}
       >
@@ -49,7 +49,7 @@ export function AvatarUploader({
       </button>
       <button
         type="button"
-        className="export-hidden absolute -bottom-1 -right-1 grid h-7 w-7 place-items-center rounded-full border-2 border-white text-white shadow-[0_2px_8px_rgba(15,20,25,0.16)] transition brightness-100 hover:brightness-95 focus:outline-none focus-visible:ring-4 focus-visible:ring-[#a884ff]/30"
+        className="export-hidden absolute -bottom-1 -right-1 grid h-7 w-7 place-items-center rounded-full border-2 border-card text-white shadow-[0_2px_8px_rgba(15,20,25,0.16)] transition brightness-100 hover:brightness-95 focus:outline-none focus-visible:ring-4 focus-visible:ring-[var(--color-focus)]"
         style={{ backgroundColor: accentColor }}
         aria-label="Upload avatar"
         onClick={() => inputRef.current?.click()}

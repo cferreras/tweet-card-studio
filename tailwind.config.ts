@@ -8,9 +8,13 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        ink: "#0f1419",
-        muted: "#637685",
-        rule: "#e7edf2",
+        app: "var(--color-app)",
+        card: "var(--color-card)",
+        ink: "var(--color-ink)",
+        muted: "var(--color-muted)",
+        rule: "var(--color-rule)",
+        menu: "var(--color-menu)",
+        placeholder: "var(--color-placeholder)",
       },
       fontFamily: {
         sans: [

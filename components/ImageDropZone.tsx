@@ -46,7 +46,7 @@ export function ImageDropZone({
       <button
         type="button"
         aria-label="Remove image block"
-        className="export-hidden absolute right-4 top-4 z-10 grid h-9 w-9 place-items-center rounded-full border border-black/5 bg-white text-ink shadow-[0_4px_14px_rgba(15,20,25,0.16)] transition hover:bg-white focus:outline-none focus-visible:ring-4 focus-visible:ring-white/55"
+        className="export-hidden absolute right-4 top-4 z-10 grid h-9 w-9 place-items-center rounded-full border border-[var(--color-menu-border)] bg-menu text-ink shadow-[var(--shadow-floating)] transition hover:bg-[var(--color-hover)] focus:outline-none focus-visible:ring-4 focus-visible:ring-[var(--color-focus)]"
         onClick={(event) => {
           event.stopPropagation();
           onImageRemove();
@@ -58,15 +58,15 @@ export function ImageDropZone({
         type="button"
         aria-label="Upload main image"
         className={[
-          "absolute inset-0 grid place-items-center text-white/90",
-          "focus:outline-none focus-visible:ring-4 focus-visible:ring-inset focus-visible:ring-white/55",
-          imageUrl ? "bg-black/0 hover:bg-black/[0.03]" : "hover:bg-white/[0.04]",
+          "group absolute inset-0 grid place-items-center",
+          "focus:outline-none focus-visible:ring-4 focus-visible:ring-inset focus-visible:ring-[#8aa0b2]/35",
+          imageUrl ? "bg-black/0 hover:bg-black/[0.03]" : "hover:bg-black/[0.02]",
         ].join(" ")}
         onClick={() => inputRef.current?.click()}
       >
         {!imageUrl ? (
-          <span className="grid h-28 w-28 place-items-center rounded-full border-[6px] border-white/72 bg-white/[0.05] shadow-[0_12px_40px_rgba(88,62,150,0.18)] backdrop-blur-[1px]">
-            <Plus aria-hidden className="h-16 w-16 stroke-[2.4] text-white/90" />
+          <span className="grid h-28 w-28 place-items-center rounded-full border border-rule bg-card shadow-[0_10px_28px_rgba(15,20,25,0.08)] transition group-hover:border-muted/45">
+            <Plus aria-hidden className="h-16 w-16 stroke-[2.4] text-muted" />
           </span>
         ) : null}
       </button>
